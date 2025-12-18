@@ -1,0 +1,21 @@
+{
+  "page": "About Us",
+  "sections": [
+    {
+      "title": "Company Overview",
+      "content": "Founded in 2020, CodingWithRoby AI emerged from a simple observation: while AI technology was advancing rapidly, most organizations struggled to implement it effectively. Our founders, a team of former Google and Microsoft AI researchers, set out to bridge this gap. Today, we're a team of 45 AI specialists serving clients across healthcare, finance, retail, and technology sectors. We've processed over 10 billion data points, deployed 200+ AI models in production, and helped our clients achieve an average of 35% operational efficiency improvements."
+    },
+    {
+      "title": "Our Team",
+      "content": "Our team comprises PhD-level data scientists, senior machine learning engineers, and AI product specialists with backgrounds from leading tech companies and research institutions. Every team member has published research in top-tier conferences or deployed production AI systems at scale. We maintain a culture of continuous learning, with dedicated time for research, experimentation, and contribution to open-source AI projects. Our diverse team brings expertise in natural language processing, computer vision, reinforcement learning, and MLOps."
+    },
+    {
+      "title": "Our Values",
+      "content": "CodingWithRoby AI is built on three core values: Innovation, Integrity, and Impact. We innovate by staying at the forefront of AI research and translating cutting-edge techniques into practical solutions. We operate with integrity by prioritizing ethical AI development, ensuring data privacy, and maintaining transparency in our methods. We focus on impact by measuring success through tangible business outcomes rather than just technical metrics. We believe AI should augment human capabilities, not replace them, and we design our solutions with this philosophy in mind."
+    },
+    {
+      "title": "Industry Recognition",
+      "content": "CodingWithRoby AI has been recognized as a leader in AI implementation by Gartner and featured in Forbes AI 50 list. Our case studies have been published in Harvard Business Review, and our team regularly speaks at leading AI conferences including NeurIPS, ICML, and CVPR. We hold partnerships with major cloud providers and are certified in AWS AI, Google Cloud AI, and Azure AI services. Our client satisfaction score stands at 4.9 out of 5, with a 95% client retention rate."
+    }
+  ]
+}

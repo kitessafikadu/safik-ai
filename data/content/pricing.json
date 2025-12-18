@@ -1,0 +1,33 @@
+{
+  "page": "Pricing",
+  "sections": [
+    {
+      "tier": "Starter Package",
+      "price": "$15,000 - $30,000",
+      "description": "Perfect for small businesses and startups looking to add AI capabilities to their products or operations. This package includes basic AI implementations with standard integrations and essential support.",
+      "includes": "Basic chatbot or virtual assistant, Integration with up to 3 data sources, Standard prompt engineering, Up to 1000 queries per day, 3 months of standard support, Basic analytics dashboard, Email support with 24-hour response time"
+    },
+    {
+      "tier": "Professional Package",
+      "price": "$50,000 - $150,000",
+      "description": "Ideal for growing companies ready to implement comprehensive AI solutions. This tier includes custom RAG systems, advanced integrations, and dedicated support from our engineering team.",
+      "includes": "Custom RAG implementation with vector database, Integration with unlimited data sources, Advanced prompt engineering and model fine-tuning, Up to 10000 queries per day, 6 months of premium support, Advanced analytics and monitoring, Custom embedding models, Priority email and chat support, Monthly performance reviews"
+    },
+    {
+      "tier": "Enterprise Package",
+      "price": "$200,000+",
+      "description": "Comprehensive AI transformation for large organizations with complex requirements. This package includes custom machine learning models, enterprise-grade security, and white-glove support.",
+      "includes": "Custom ML model development and training, Multi-model AI architecture, Enterprise security and compliance (SOC 2, HIPAA), Unlimited queries with auto-scaling, 12 months of premium support with SLA, Dedicated AI engineer and account manager, On-premise or private cloud deployment, Custom integrations and APIs, 24/7 phone and chat support, Weekly strategy sessions and quarterly business reviews"
+    },
+    {
+      "tier": "Consulting Services",
+      "price": "$5,000 - $50,000",
+      "description": "Strategic guidance and expert advice for organizations planning their AI journey. Our consulting services help you identify opportunities, assess readiness, and create actionable AI roadmaps.",
+      "includes": "AI readiness assessment, Use case identification and prioritization, Technology stack recommendations, ROI analysis and business case development, Team training and capability building, AI governance framework design, Ongoing advisory services available on retainer"
+    },
+    {
+      "title": "Additional Information",
+      "content": "All packages include initial consultation, requirements analysis, and project planning. We offer flexible payment terms including milestone-based payments and monthly retainers. Ongoing maintenance and support packages are available starting at $2,000 per month. Volume discounts are available for multiple projects or long-term partnerships. Custom packages can be designed for unique requirements. Contact us for a detailed proposal tailored to your specific needs."
+    }
+  ]
+}

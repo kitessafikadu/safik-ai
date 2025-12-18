@@ -1,0 +1,23 @@
+{
+  "page": "Case Studies",
+  "studies": [
+    {
+      "client": "HealthTech Solutions - Clinical Decision Support System",
+      "challenge": "A healthcare technology company needed to help physicians quickly access relevant medical literature and clinical guidelines during patient consultations. Their existing keyword-based search was returning too many irrelevant results, leading to physician frustration and underutilization of their knowledge base.",
+      "solution": "We implemented a RAG-based clinical decision support system using MongoDB Atlas Vector Search. The system indexed over 2 million medical documents, research papers, and clinical guidelines. We fine-tuned the embedding model on medical terminology and integrated it with their existing EHR system. Physicians could ask natural language questions and receive evidence-based answers with proper citations.",
+      "results": "95% reduction in search time, 87% physician satisfaction score, 40% increase in knowledge base utilization, Processing 50,000 queries daily with 200ms average response time, ROI achieved within 4 months through improved physician productivity"
+    },
+    {
+      "client": "Global Financial Services - Fraud Detection System",
+      "challenge": "A multinational bank was experiencing increasing fraud losses due to sophisticated attack patterns that their rule-based system couldn't detect. They needed a machine learning solution that could identify anomalous transactions in real-time while minimizing false positives that frustrate legitimate customers.",
+      "solution": "We developed a custom ensemble machine learning model combining gradient boosting, neural networks, and anomaly detection algorithms. The system analyzes over 200 features in real-time including transaction patterns, device fingerprints, and behavioral biometrics. We implemented a feedback loop where fraud analysts can quickly confirm or reject predictions, continuously improving model accuracy.",
+      "results": "73% reduction in fraud losses, 65% decrease in false positives, Detection of fraud attempts within 100 milliseconds, $12 million in prevented fraud in the first year, 99.97% system uptime, Model improved customer satisfaction scores by 28%"
+    },
+    {
+      "client": "E-commerce Retailer - Intelligent Customer Service Chatbot",
+      "challenge": "A rapidly growing e-commerce company was overwhelmed with customer service inquiries. Their support team couldn't keep up with demand, leading to long wait times, customer dissatisfaction, and lost sales. They needed an AI solution that could handle common inquiries while seamlessly escalating complex issues to human agents.",
+      "solution": "We built an advanced conversational AI chatbot using LangChain and OpenAI's GPT-4. The bot has access to their product catalog, order history, shipping information, and return policies through RAG integration with MongoDB. We implemented sophisticated intent classification to route complex issues to appropriate departments and added sentiment analysis to prioritize frustrated customers.",
+      "results": "68% of customer inquiries resolved without human intervention, Average response time reduced from 4 hours to 30 seconds, 24/7 availability across web, mobile, and WhatsApp, Customer satisfaction score increased from 3.2 to 4.7 out of 5, Support team costs reduced by 45%, Handling 15,000 conversations daily with 92% successful resolution rate"
+    }
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "page": "Services",
+  "sections": [
+    {
+      "service": "Retrieval-Augmented Generation (RAG) Systems",
+      "description": "Our RAG systems combine the power of large language models with your proprietary data to create intelligent, context-aware applications. We build custom chatbots, virtual assistants, and knowledge management systems that provide accurate, source-backed responses. Our RAG solutions integrate seamlessly with existing databases and can handle millions of documents with sub-second query times.",
+      "features": "Real-time document retrieval, Multi-source data integration, Custom embedding models, Semantic search capabilities, Source attribution and citation tracking"
+    },
+    {
+      "service": "Conversational AI and Chatbots",
+      "description": "We design and deploy enterprise chatbots that handle customer service, internal support, and sales enablement. Our conversational AI solutions understand natural language, maintain context across conversations, and integrate with your CRM, ticketing systems, and knowledge bases. We support multi-channel deployment including web, mobile, Slack, Teams, and WhatsApp.",
+      "features": "Natural language understanding, Multi-turn conversation management, Sentiment analysis, Intent classification, 24/7 automated support, Human handoff capabilities"
+    },
+    {
+      "service": "Custom Machine Learning Models",
+      "description": "Our team develops bespoke machine learning models tailored to your specific business needs. From predictive analytics and demand forecasting to computer vision and anomaly detection, we build models that solve real business problems. We handle everything from data collection and preprocessing to model training, validation, and deployment at scale.",
+      "features": "Predictive analytics, Classification and regression models, Time series forecasting, Computer vision solutions, Anomaly detection, Model interpretability and explainability"
+    },
+    {
+      "service": "AI Strategy and Consulting",
+      "description": "Not sure where to start with AI? Our consulting services help organizations identify high-impact AI opportunities, develop roadmaps, and build internal AI capabilities. We conduct AI readiness assessments, feasibility studies, and provide guidance on tool selection, team building, and governance frameworks. Our consultants have helped organizations achieve 10x ROI on their AI investments.",
+      "features": "AI readiness assessment, Use case identification and prioritization, Technology stack recommendations, Team training and upskilling, AI governance and ethics frameworks"
+    },
+    {
+      "service": "AI Model Fine-tuning and Optimization",
+      "description": "We specialize in fine-tuning large language models and other foundation models on your domain-specific data. Our optimization services improve model accuracy, reduce latency, and minimize computational costs. We work with models from OpenAI, Anthropic, Google, and open-source alternatives, ensuring you get the best performance for your specific use case.",
+      "features": "Domain-specific fine-tuning, Prompt engineering, Model compression and quantization, Latency optimization, Cost reduction strategies, A/B testing and evaluation"
+    },
+    {
+      "service": "Vector Database Implementation",
+      "description": "We implement and optimize vector database solutions for semantic search, recommendation systems, and similarity matching. Our expertise spans MongoDB Atlas Vector Search, Pinecone, Weaviate, and Qdrant. We handle data ingestion pipelines, embedding generation, index optimization, and query performance tuning to ensure your vector search operates at peak efficiency.",
+      "features": "Vector database setup and configuration, Embedding model selection and training, Index optimization, Hybrid search implementation, Scalability and performance tuning"
+    }
+  ]
+}

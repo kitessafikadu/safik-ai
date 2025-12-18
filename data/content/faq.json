@@ -1,0 +1,45 @@
+{
+  "page": "FAQ",
+  "questions": [
+    {
+      "question": "How long does it take to implement an AI solution?",
+      "answer": "Implementation timelines vary based on project complexity. A basic chatbot or RAG system typically takes 4-6 weeks from kickoff to production deployment. More complex projects involving custom machine learning models or enterprise-wide AI implementations can take 3-6 months. We follow an agile methodology with bi-weekly sprints, so you'll see working prototypes within the first 2-3 weeks. Our average time-to-value is 8 weeks, meaning most clients see measurable business impact within two months."
+    },
+    {
+      "question": "What industries do you specialize in?",
+      "answer": "We have deep expertise in healthcare, financial services, retail and e-commerce, manufacturing, and technology sectors. In healthcare, we've built clinical decision support systems and medical imaging analysis tools. For financial services, we've developed fraud detection systems and algorithmic trading models. Our retail clients use our recommendation engines and demand forecasting solutions. However, our methodologies are industry-agnostic, and we've successfully delivered projects across 15+ different sectors."
+    },
+    {
+      "question": "Do you work with existing data infrastructure?",
+      "answer": "Absolutely. We're experienced in integrating with existing data warehouses, databases, and cloud platforms. We work with all major cloud providers (AWS, Azure, Google Cloud) and can integrate with on-premise systems. Our solutions support common databases like PostgreSQL, MySQL, MongoDB, and data lakes on S3 or Azure Blob Storage. We also handle data migration and can help modernize legacy systems as part of the AI implementation process."
+    },
+    {
+      "question": "How do you ensure data privacy and security?",
+      "answer": "Data security is our top priority. All our solutions are built with security-by-design principles. We implement end-to-end encryption, role-based access control, and audit logging. We're SOC 2 Type II certified, GDPR compliant, and HIPAA compliant for healthcare projects. Your data never leaves your environment unless explicitly configured otherwise. We can deploy solutions entirely within your VPC or on-premise infrastructure. We also provide data anonymization and synthetic data generation services when needed."
+    },
+    {
+      "question": "What AI models and technologies do you use?",
+      "answer": "We're technology-agnostic and select tools based on your specific needs. For large language models, we work with OpenAI GPT-4, Anthropic Claude, Google Gemini, and open-source models like Llama and Mistral. For machine learning, we use TensorFlow, PyTorch, and scikit-learn. Our vector databases of choice include MongoDB Atlas Vector Search, Pinecone, and Weaviate. We also use LangChain and LlamaIndex for RAG implementations. We stay current with the latest research and continuously evaluate new technologies."
+    },
+    {
+      "question": "Can you help with existing AI models that aren't performing well?",
+      "answer": "Yes, we offer AI audit and optimization services. We analyze existing models to identify performance bottlenecks, data quality issues, or architectural problems. Common improvements include better feature engineering, hyperparameter tuning, model architecture changes, or switching to more appropriate algorithms. We've helped clients improve model accuracy by 20-40% and reduce inference costs by up to 60%. We also provide ongoing monitoring and retraining services to prevent model drift."
+    },
+    {
+      "question": "What kind of support do you provide after deployment?",
+      "answer": "We offer comprehensive post-deployment support including 24/7 monitoring, incident response, regular model retraining, and performance optimization. Our standard support packages include monthly performance reports, quarterly model audits, and continuous improvement recommendations. We also provide training for your team to manage and maintain the AI systems. Most clients start with our Premium Support package for the first 6 months, then transition to Standard Support once their team is fully trained."
+    },
+    {
+      "question": "How much does an AI project cost?",
+      "answer": "Project costs vary widely based on scope and complexity. Small projects like a basic chatbot start at $15,000. Mid-sized RAG implementations or custom model development typically range from $50,000 to $150,000. Enterprise-wide AI transformations can exceed $500,000. We offer flexible pricing models including fixed-price projects, time-and-materials, and retainer-based arrangements. During our initial consultation, we provide a detailed estimate based on your specific requirements. We also offer pilot projects starting at $10,000 to prove value before larger commitments."
+    },
+    {
+      "question": "Do you provide training for our team?",
+      "answer": "Yes, we offer comprehensive training programs tailored to different roles. For technical teams, we provide hands-on workshops covering model deployment, monitoring, and maintenance. For business users, we offer training on how to effectively use and interpret AI system outputs. We also provide executive briefings on AI strategy and governance. Training can be delivered on-site or remotely, and we provide ongoing office hours for continued learning. Many clients opt for our Train-the-Trainer program to build internal AI champions."
+    },
+    {
+      "question": "What makes CodingWithRoby AI different from other AI consultancies?",
+      "answer": "Three key differentiators set us apart. First, our team's deep technical expertise - we don't just implement off-the-shelf solutions, we build custom AI systems leveraging the latest research. Second, our focus on business outcomes - we measure success by ROI and business impact, not just technical metrics. Third, our commitment to knowledge transfer - we aim to build your internal AI capabilities, not create vendor lock-in. We've maintained a 95% client retention rate because we deliver measurable results and empower our clients to succeed independently."
+    }
+  ]
+}
