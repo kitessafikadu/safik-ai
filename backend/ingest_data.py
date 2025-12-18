@@ -18,7 +18,53 @@ load_dotenv()
 
 # Configuration
 PERSIST_DIRECTORY = os.getenv("PERSIST_DIRECTORY", str(Path(__file__).parent.parent / "chroma_db"))
-COLLECTION_NAME = os.getenv("COLLECTION_NAME", "website_content")
+COLLECTION_NAME_RAW = os.getenv("COLLECTION_NAME", "website_content")
+
+def sanitize_collection_name(name: str) -> str:
+    """
+    Sanitize collection name to meet ChromaDB requirements:
+    1. Contains 3-63 characters
+    2. Starts and ends with an alphanumeric character
+    3. Contains only alphanumeric characters, underscores, or hyphens
+    4. Contains no two consecutive periods
+    5. Is not a valid IPv4 address
+    """
+    if not name or not isinstance(name, str):
+        name = "website_content"
+    
+    # Remove invalid characters (keep only alphanumeric, underscore, hyphen)
+    import re
+    name = re.sub(r'[^a-zA-Z0-9_-]', '_', name)
+    
+    # Remove consecutive periods
+    name = re.sub(r'\.\.+', '_', name)
+    
+    # Ensure it starts and ends with alphanumeric
+    name = name.strip('_-')
+    
+    # Handle empty string after stripping
+    if not name:
+        name = "website_content"
+    
+    # Ensure starts with alphanumeric
+    if name and not name[0].isalnum():
+        name = 'a' + name
+    
+    # Ensure ends with alphanumeric
+    if name and not name[-1].isalnum():
+        name = name + '1'
+    
+    # Ensure length is between 3-63
+    if len(name) < 3:
+        name = name.ljust(3, '0')
+    elif len(name) > 63:
+        name = name[:63]
+        if not name[-1].isalnum():
+            name = name[:-1] + '0'
+    
+    return name
+
+COLLECTION_NAME = sanitize_collection_name(COLLECTION_NAME_RAW)
 
 # Paths
 CONTENT_DIR = Path(__file__).parent.parent / "data" / "content"
