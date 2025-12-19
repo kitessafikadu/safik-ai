@@ -64,7 +64,7 @@ RAG-System/
 ### Step 1: Clone the Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/kitessafikadu/RAG-System.git
 cd RAG-System
 ```
 
