@@ -44,50 +44,53 @@ const suggestedPills = document.querySelectorAll(".suggested-pill");
 // API endpoint - will be updated when backend is ready
 const API_ENDPOINT = "http://localhost:8000/api/chat";
 
-// Enable send button when input has content
-if (chatInput && sendButton) {
-  chatInput.addEventListener("input", () => {
-    sendButton.disabled = chatInput.value.trim() === "";
-    autoResizeTextarea();
-  });
-}
-
 // Auto-resize textarea
 function autoResizeTextarea() {
+  if (!chatInput) return;
   chatInput.style.height = "auto";
   chatInput.style.height = Math.min(chatInput.scrollHeight, 120) + "px";
 }
 
-// Send message on Enter (Shift+Enter for new line)
-chatInput.addEventListener("keydown", (e) => {
-  if (e.key === "Enter" && !e.shiftKey) {
-    e.preventDefault();
-    sendMessage();
-  }
-});
-
-// Send button click
-sendButton.addEventListener("click", sendMessage);
-
-// Clear chat
-clearChatButton.addEventListener("click", () => {
-  // Keep only the initial bot message
-  const initialMessage = chatMessages.querySelector(".bot-message");
-  chatMessages.innerHTML = "";
-  chatMessages.appendChild(initialMessage.cloneNode(true));
-});
-
-// Suggested questions
-suggestedPills.forEach((pill) => {
-  pill.addEventListener("click", () => {
-    chatInput.value = pill.textContent;
-    sendButton.disabled = false;
-    sendMessage();
+// Only initialize chat functionality if we're on the chatbot page
+if (chatInput && sendButton && clearChatButton && chatMessages) {
+  // Enable send button when input has content
+  chatInput.addEventListener("input", () => {
+    sendButton.disabled = chatInput.value.trim() === "";
+    autoResizeTextarea();
   });
-});
+
+  // Send message on Enter (Shift+Enter for new line)
+  chatInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+
+  // Send button click
+  sendButton.addEventListener("click", sendMessage);
+
+  // Clear chat
+  clearChatButton.addEventListener("click", () => {
+    // Keep only the initial bot message
+    const initialMessage = chatMessages.querySelector(".bot-message");
+    chatMessages.innerHTML = "";
+    chatMessages.appendChild(initialMessage.cloneNode(true));
+  });
+
+  // Suggested questions
+  suggestedPills.forEach((pill) => {
+    pill.addEventListener("click", () => {
+      chatInput.value = pill.textContent;
+      sendButton.disabled = false;
+      sendMessage();
+    });
+  });
+}
 
 // Main send message function
 async function sendMessage() {
+  if (!chatInput || !sendButton || !chatMessages) return;
   const message = chatInput.value.trim();
   if (!message) return;
 
@@ -137,6 +140,7 @@ async function sendMessage() {
 
 // Add message to chat
 function addMessage(text, sender, sources = null) {
+  if (!chatMessages) return null;
   const messageDiv = document.createElement("div");
   messageDiv.className = `message ${sender}-message`;
 
@@ -196,6 +200,7 @@ function addMessage(text, sender, sources = null) {
 
 // Add typing indicator
 function addTypingIndicator() {
+  if (!chatMessages) return null;
   const messageDiv = document.createElement("div");
   messageDiv.className = "message bot-message";
 
