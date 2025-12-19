@@ -1,45 +1,56 @@
-// Chat application logic
+// Wait for DOM to be fully loaded
+document.addEventListener("DOMContentLoaded", () => {
+  // Hamburger menu toggle
+  const hamburgerMenu = document.getElementById("hamburgerMenu");
+  const navMenu = document.getElementById("navMenu");
+
+  if (hamburgerMenu && navMenu) {
+    hamburgerMenu.addEventListener("click", (e) => {
+      e.stopPropagation(); // Prevent event from bubbling to document
+      hamburgerMenu.classList.toggle("active");
+      navMenu.classList.toggle("active");
+    });
+
+    // Close menu when clicking on a link
+    navMenu.addEventListener("click", (e) => {
+      if (e.target.tagName === "A") {
+        hamburgerMenu.classList.remove("active");
+        navMenu.classList.remove("active");
+      }
+    });
+
+    // Close menu when clicking outside
+    document.addEventListener("click", (e) => {
+      // Only close if menu is active and click is outside both hamburger and menu
+      if (
+        navMenu.classList.contains("active") &&
+        !hamburgerMenu.contains(e.target) &&
+        !navMenu.contains(e.target)
+      ) {
+        hamburgerMenu.classList.remove("active");
+        navMenu.classList.remove("active");
+      }
+    });
+  }
+});
+
+// Chat application logic (only if elements exist - for chatbot page)
 const chatMessages = document.getElementById("chatMessages");
 const chatInput = document.getElementById("chatInput");
 const sendButton = document.getElementById("sendButton");
 const clearChatButton = document.getElementById("clearChat");
 const suggestedPills = document.querySelectorAll(".suggested-pill");
 
-// Hamburger menu toggle
-const hamburgerMenu = document.getElementById("hamburgerMenu");
-const navMenu = document.getElementById("navMenu");
-
-if (hamburgerMenu && navMenu) {
-  hamburgerMenu.addEventListener("click", () => {
-    hamburgerMenu.classList.toggle("active");
-    navMenu.classList.toggle("active");
-  });
-
-  // Close menu when clicking on a link
-  navMenu.addEventListener("click", (e) => {
-    if (e.target.tagName === "A") {
-      hamburgerMenu.classList.remove("active");
-      navMenu.classList.remove("active");
-    }
-  });
-
-  // Close menu when clicking outside
-  document.addEventListener("click", (e) => {
-    if (!hamburgerMenu.contains(e.target) && !navMenu.contains(e.target)) {
-      hamburgerMenu.classList.remove("active");
-      navMenu.classList.remove("active");
-    }
-  });
-}
-
 // API endpoint - will be updated when backend is ready
 const API_ENDPOINT = "http://localhost:8000/api/chat";
 
 // Enable send button when input has content
-chatInput.addEventListener("input", () => {
-  sendButton.disabled = chatInput.value.trim() === "";
-  autoResizeTextarea();
-});
+if (chatInput && sendButton) {
+  chatInput.addEventListener("input", () => {
+    sendButton.disabled = chatInput.value.trim() === "";
+    autoResizeTextarea();
+  });
+}
 
 // Auto-resize textarea
 function autoResizeTextarea() {
