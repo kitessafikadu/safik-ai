@@ -1,6 +1,6 @@
 # Safik AI Web App
 
-Safik AI Web App is a retrieval augmented generation (RAG) system that powers an AI chatbot using ChromaDB vector store, LangChain, and HuggingFace embeddings. This system allows users to ask questions about company services, pricing, and information stored in a knowledge base.
+Safik AI is Web App with a retrieval augmented generation (RAG) system that powers an AI chatbot using ChromaDB vector store, LangChain, and HuggingFace embeddings. This system allows users to ask questions about company services, pricing, and information stored in a knowledge base.
 
 ## 🚀 Features
 
@@ -90,22 +90,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-**Note**: This will install PyTorch and transformers which may take several minutes and require significant disk space (~2-3GB).
-
-### Step 4: Ingest Data into ChromaDB
-
-Before running the server, you need to ingest your knowledge base data into ChromaDB:
-
-```bash
-python ingest_data.py
-```
-
-This script will:
-
-- Load all JSON files from `data/content/`
-- Chunk the documents for better retrieval
-- Generate embeddings using HuggingFace models
-- Store everything in ChromaDB vector store
+**Note**: This will install PyTorch and transformers which may take some minutes 
 
 ## 🚀 Usage
 
