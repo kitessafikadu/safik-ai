@@ -1,14 +1,17 @@
 import Link from "next/link";
-
+import Image from "next/image";
 export default function Footer() {
   return (
     <footer className="footer">
       <div className="container">
         <div className="footer-content">
           <div className="footer-section">
-            <div className="">
-              <span className="text-white">Safik AI</span>
+            <Link href="/" className="logo">
+            <div className="logo">
+            <Image src="/logo.ico" alt="Logo" width={40} height={40} />
+              <span className="text-white text-decoration-none">Safik AI</span>
             </div>
+            </Link>
             <p className="footer-description">
               Enterprise-grade AI solutions that drive measurable business
               outcomes.

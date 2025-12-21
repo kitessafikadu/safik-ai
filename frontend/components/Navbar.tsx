@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 
@@ -52,6 +53,7 @@ export default function Navbar() {
       <div className="container">
         <div className="nav-brand">
           <Link href="/" className="logo" onClick={closeMenu}>
+          <Image src="/logo.ico" alt="Logo" width={40} height={40} />
               <span className="logo-text">Safik AI</span>
           </Link>
         </div>

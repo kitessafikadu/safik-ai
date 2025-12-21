@@ -70,7 +70,7 @@ body {
   gap: 12px;
   font-size: 20px;
   font-weight: 700;
-  color: var(--text-primary);
+  /* color: var(--text-primary); */
   text-decoration: none;
   flex-shrink: 0;
 }
