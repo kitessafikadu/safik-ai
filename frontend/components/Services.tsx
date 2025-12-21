@@ -195,7 +195,7 @@ export default function Services() {
               similarity matching.
             </p>
             <ul className="service-features">
-              <li>MongoDB Atlas Vector Search</li>
+              <li>ChromaDB Vector Search</li>
               <li>Embedding optimization</li>
               <li>Hybrid search implementation</li>
             </ul>

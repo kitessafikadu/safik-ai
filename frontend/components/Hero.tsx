@@ -1,4 +1,5 @@
 import Link from "next/link";
+import CountUp from "./CountUp";
 
 export default function Hero() {
   return (
@@ -26,15 +27,21 @@ export default function Hero() {
           </div>
           <div className="hero-stats">
             <div className="stat">
-              <div className="stat-number">200+</div>
+              <div className="stat-number">
+                <CountUp end={200} suffix="+" />
+              </div>
               <div className="stat-label">AI Models Deployed</div>
             </div>
             <div className="stat">
-              <div className="stat-number">50+</div>
+              <div className="stat-number">
+                <CountUp end={50} suffix="+" />
+              </div>
               <div className="stat-label">Enterprise Clients</div>
             </div>
             <div className="stat">
-              <div className="stat-number">95%</div>
+              <div className="stat-number">
+                <CountUp end={95} suffix="%" />
+              </div>
               <div className="stat-label">Client Retention</div>
             </div>
           </div>
