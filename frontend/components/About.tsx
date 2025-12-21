@@ -1,3 +1,5 @@
+import CountUp from "./CountUp";
+
 export default function About() {
   return (
     <section id="about" className="about">
@@ -45,15 +47,21 @@ export default function About() {
           <div className="about-image">
             <div className="stats-card">
               <div className="stats-card-item">
-                <div className="stats-number">45</div>
+                <div className="stats-number">
+                  <CountUp end={45} />
+                </div>
                 <div className="stats-text">AI Specialists</div>
               </div>
               <div className="stats-card-item">
-                <div className="stats-number">10B+</div>
+                <div className="stats-number">
+                  <CountUp end={10} suffix="B+" />
+                </div>
                 <div className="stats-text">Data Points Processed</div>
               </div>
               <div className="stats-card-item">
-                <div className="stats-number">35%</div>
+                <div className="stats-number">
+                  <CountUp end={35} suffix="%" />
+                </div>
                 <div className="stats-text">Avg. Efficiency Gain</div>
               </div>
             </div>

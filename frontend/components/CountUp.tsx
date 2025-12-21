@@ -2,8 +2,6 @@
 
 import { useEffect, useState, useRef } from "react";
 
-let animatedOnce = false;
-
 interface CountUpProps {
   end: number;
   duration?: number;
@@ -20,9 +18,10 @@ export default function CountUp({
   const [count, setCount] = useState(0);
   const elementRef = useRef<HTMLSpanElement>(null);
   const rafId = useRef<number | null>(null);
+  const hasAnimated = useRef(false);
 
   useEffect(() => {
-    if (animatedOnce) {
+    if (hasAnimated.current) {
       setCount(end);
       return;
     }
@@ -42,13 +41,13 @@ export default function CountUp({
         rafId.current = requestAnimationFrame(animate);
       } else {
         setCount(end);
-        animatedOnce = true;
+        hasAnimated.current = true;
       }
     };
 
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting && !animatedOnce) {
+        if (entry.isIntersecting && !hasAnimated.current) {
           rafId.current = requestAnimationFrame(animate);
           observer.disconnect();
         }
