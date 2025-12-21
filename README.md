@@ -67,8 +67,8 @@ RAG-System/
 ### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/kitessafikadu/safik-ai-web-app.git
-cd RAG-System
+git clone https://github.com/kitessafikadu/safik-ai.git
+cd safik-ai
 ```
 
 ### Step 2: Set Up Python Virtual Environment
