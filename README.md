@@ -1,6 +1,6 @@
-# RAG System - AI-Powered Chatbot
+# Safik AI Web App
 
-A Retrieval-Augmented Generation (RAG) system that powers an AI chatbot using ChromaDB vector store, LangChain, and HuggingFace embeddings. This system allows users to ask questions about company services, pricing, and information stored in a knowledge base.
+Safik AI Web App is a retrieval augmented generation (RAG) system that powers an AI chatbot using ChromaDB vector store, LangChain, and HuggingFace embeddings. This system allows users to ask questions about company services, pricing, and information stored in a knowledge base.
 
 ## 🚀 Features
 
@@ -24,8 +24,10 @@ A Retrieval-Augmented Generation (RAG) system that powers an AI chatbot using Ch
 
 ### Frontend
 
-- **HTML5/CSS3** - Modern, responsive design
-- **Vanilla JavaScript** - No framework dependencies
+- **Next.js 14** - React Framework for the Web
+- **React** - Library for web and native user interfaces
+- **TypeScript** - Strongly typed programming language
+- **CSS3** - Ported legacy styles for consistent design
 - **Inter Font** - Clean, modern typography
 
 ## 📁 Project Structure
@@ -38,10 +40,11 @@ RAG-System/
 │   ├── ingest_data.py       # Data ingestion script
 │   └── requirements.txt     # Python dependencies
 ├── frontend/
-│   ├── index.html          # Homepage
-│   ├── chatbot.html        # Chatbot interface
-│   ├── app.js              # Frontend JavaScript logic
-│   └── styles.css          # Stylesheet
+│   ├── app/                # Next.js App Router pages
+│   ├── components/         # React components
+│   ├── public/             # Static assets
+│   ├── next.config.mjs     # Next.js configuration
+│   └── package.json        # Frontend dependencies
 ├── data/
 │   └── content/            # Knowledge base JSON files
 │       ├── about.json
@@ -64,7 +67,7 @@ RAG-System/
 ### Step 1: Clone the Repository
 
 ```bash
-git clone https://github.com/kitessafikadu/RAG-System.git
+git clone https://github.com/kitessafikadu/safik-ai-web-app.git
 cd RAG-System
 ```
 
@@ -123,17 +126,22 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
 ### Viewing the Frontend
 
-1. **Option 1: Open directly in browser**
-
-   - Navigate to `frontend/` folder
-   - Double-click `index.html` or `chatbot.html`
-
-2. **Option 2: Use a local HTTP server** (Recommended)
+1. Navigate to the frontend directory:
    ```bash
    cd frontend
-   python -m http.server 8080
    ```
-   Then open `http://localhost:8080` in your browser
+
+2. Install dependencies (first time only):
+   ```bash
+   npm install
+   ```
+
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+4. Open `http://localhost:3000` in your browser.
 
 ### Using the Chatbot
 
@@ -281,9 +289,9 @@ Edit `backend/rag_system.py` to:
 
 ### Customizing the Frontend
 
-- Edit `frontend/styles.css` for styling
-- Modify `frontend/app.js` for functionality
-- Update HTML files for structure changes
+- Edit `frontend/app/globals.css` for styling
+- Modify React components in `frontend/components/`
+- Update pages in `frontend/app/`
 
 ## 📚 Dependencies
 
