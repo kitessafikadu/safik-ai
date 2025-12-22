@@ -7,10 +7,8 @@ export default function Footer() {
         <div className="footer-content">
           <div className="footer-section">
             <Link href="/" className="logo">
-            <div className="logo">
-            <Image src="/logo.ico" alt="Logo" width={40} height={40} />
+              <Image src="/logo.ico" alt="Logo" width={40} height={40} />
               <span className="text-white text-decoration-none">Safik AI</span>
-            </div>
             </Link>
             <p className="footer-description">
               Enterprise-grade AI solutions that drive measurable business
