@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import Image from "next/image";
 
 interface Message {
   id: string;
@@ -212,33 +213,14 @@ export default function ChatInterface() {
               >
                 <div className="message-avatar">
                   {msg.sender === "bot" ? (
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                      <rect
-                        width="24"
-                        height="24"
-                        rx="6"
-                        fill="url(#botGradient)"
-                      />
-                      <path
-                        d="M6 12L9 9L12 12L15 9L18 12"
-                        stroke="white"
-                        strokeWidth="1.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                      <defs>
-                        <linearGradient
-                          id="botGradient"
-                          x1="0"
-                          y1="0"
-                          x2="24"
-                          y2="24"
-                        >
-                          <stop offset="0%" stopColor="#667eea" />
-                          <stop offset="100%" stopColor="#764ba2" />
-                        </linearGradient>
-                      </defs>
-                    </svg>
+                    <Image 
+                      src="/bot.png" 
+                      alt="AI Assistant" 
+                      width={24} 
+                      height={24} 
+                      className="bot-avatar-img"
+                      style={{ borderRadius: '6px' }}
+                    />
                   ) : (
                     "U"
                   )}
@@ -262,33 +244,14 @@ export default function ChatInterface() {
             {isLoading && (
               <div className="message bot-message">
                 <div className="message-avatar">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-                    <rect
-                      width="24"
-                      height="24"
-                      rx="6"
-                      fill="url(#botGradientTyping)"
-                    />
-                    <path
-                      d="M6 12L9 9L12 12L15 9L18 12"
-                      stroke="white"
-                      strokeWidth="1.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                    />
-                    <defs>
-                      <linearGradient
-                        id="botGradientTyping"
-                        x1="0"
-                        y1="0"
-                        x2="24"
-                        y2="24"
-                      >
-                        <stop offset="0%" stopColor="#667eea" />
-                        <stop offset="100%" stopColor="#764ba2" />
-                      </linearGradient>
-                    </defs>
-                  </svg>
+                  <Image 
+                    src="/bot.png" 
+                    alt="AI Assistant" 
+                    width={24} 
+                    height={24} 
+                    className="bot-avatar-img"
+                    style={{ borderRadius: '6px' }}
+                  />
                 </div>
                 <div className="message-content">
                   <div className="message-text">

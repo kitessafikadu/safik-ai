@@ -1,4 +1,4 @@
-# Safik AI Web App
+# Safik AI
 
 Safik AI is Web App with a retrieval augmented generation (RAG) system that powers an AI chatbot using ChromaDB vector store, LangChain, and HuggingFace embeddings. This system allows users to ask questions about company services, pricing, and information stored in a knowledge base.
 
