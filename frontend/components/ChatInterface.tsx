@@ -10,6 +10,8 @@ interface Message {
   sources?: string[];
 }
 
+const DEFAULT_ERROR_MESSAGE = "I apologize, but I'm currently unable to process your request. This could be because the server is not running yet. Please make sure the server is started and try again.";
+
 export default function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>([
     {
@@ -92,7 +94,7 @@ export default function ChatInterface() {
       console.error("Error:", error);
       const errorMsg: Message = {
         id: (Date.now() + 1).toString(),
-        text: "I apologize, but I'm currently unable to process your request. This could be because the server is not running yet. Please make sure the server is started and try again.",
+        text: DEFAULT_ERROR_MESSAGE,
         sender: "bot",
       };
       setMessages((prev) => [...prev, errorMsg]);
@@ -166,7 +168,7 @@ export default function ChatInterface() {
       console.error("Error:", error);
       const errorMsg: Message = {
         id: (Date.now() + 1).toString(),
-        text: "I apologize, but I'm currently unable to process your request. This could be because the backend server is not running yet. Please make sure the FastAPI server is started and try again.",
+        text: DEFAULT_ERROR_MESSAGE,
         sender: "bot",
       };
       setMessages((prev) => [...prev, errorMsg]);
