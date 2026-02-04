@@ -39,8 +39,7 @@ export default function Footer() {
           </div>
         </div>
         <div className="footer-bottom">
-          <p>&copy; 2025 Safik AI. All rights reserved.</p>
-        </div>
+<p>&copy; {new Date().getFullYear()} Safik AI. All rights reserved.</p>        </div>
       </div>
     </footer>
   );
