@@ -2,7 +2,9 @@
 RAG System using LangChain, ChromaDB Vector Store, and HuggingFace
 """
 
+import json
 import os
+import re
 from pathlib import Path
 from dotenv import load_dotenv
 from langchain_huggingface import HuggingFaceEmbeddings
@@ -11,7 +13,6 @@ from langchain_community.vectorstores import Chroma
 from langchain.prompts import ChatPromptTemplate
 from langchain.schema.runnable import RunnablePassthrough
 from langchain.schema.output_parser import StrOutputParser
-from transformers import pipeline
 
 # Load environment variables
 load_dotenv()
@@ -67,6 +68,59 @@ def sanitize_collection_name(name: str) -> str:
 COLLECTION_NAME = sanitize_collection_name(COLLECTION_NAME_RAW)
 
 
+def load_documents_from_content_dir(content_dir: Path):
+    documents = []
+
+    for json_file in content_dir.glob("*.json"):
+        with open(json_file, "r", encoding="utf-8") as file_handle:
+            data = json.load(file_handle)
+
+        page_name = data.get("page", json_file.stem)
+
+        if "sections" in data:
+            for section in data["sections"]:
+                if "title" in section and "content" in section:
+                    text = f"{section['title']}\n\n{section['content']}"
+                    metadata = {
+                        "source": json_file.stem,
+                        "page": page_name,
+                        "section": section["title"],
+                    }
+                elif "tier" in section:
+                    text = f"{section['tier']}\n\nPrice: {section.get('price', 'N/A')}\n\n{section['description']}\n\nIncludes: {section.get('includes', '')}"
+                    metadata = {
+                        "source": json_file.stem,
+                        "page": page_name,
+                        "section": section["tier"],
+                    }
+                else:
+                    continue
+
+                documents.append({"page_content": text, "metadata": metadata})
+
+        elif "questions" in data:
+            for qa in data["questions"]:
+                text = f"Question: {qa['question']}\n\nAnswer: {qa['answer']}"
+                metadata = {
+                    "source": json_file.stem,
+                    "page": page_name,
+                    "question": qa["question"],
+                }
+                documents.append({"page_content": text, "metadata": metadata})
+
+        elif "studies" in data:
+            for study in data["studies"]:
+                text = f"Client: {study['client']}\n\nChallenge: {study['challenge']}\n\nSolution: {study['solution']}\n\nResults: {study['results']}"
+                metadata = {
+                    "source": json_file.stem,
+                    "page": page_name,
+                    "client": study["client"],
+                }
+                documents.append({"page_content": text, "metadata": metadata})
+
+    return documents
+
+
 class RAGSystem:
     """RAG system for answering questions about Safik AI"""
 
@@ -74,60 +128,38 @@ class RAGSystem:
         """Initialize the RAG system with ChromaDB vector store and HuggingFace"""
         print("Initializing RAG system...")
 
-        # Initialize embeddings model
-        print("Loading HuggingFace embeddings model...")
-        self.embeddings = HuggingFaceEmbeddings(
-            model_name="sentence-transformers/all-MiniLM-L6-v2"
-        )
+        self.embeddings = None
+        self.vector_store = None
+        self.retriever = None
+        self.llm = None
+        self.rag_chain = None
+        self.fallback_documents = []
+        self.use_fallback_mode = False
 
-        # Initialize ChromaDB vector store
-        print(f"Loading ChromaDB vector store from {PERSIST_DIRECTORY}...")
-        self.vector_store = Chroma(
-            persist_directory=PERSIST_DIRECTORY,
-            embedding_function=self.embeddings,
-            collection_name=COLLECTION_NAME
-        )
-
-        # Initialize LLM using HuggingFace
-        print("Loading HuggingFace LLM...")
-        # Using a lightweight instruction-following model
-        model_name = "google/flan-t5-base"
         try:
-            hf_pipeline = pipeline(
-                "text2text-generation",
-                model=model_name,
-                max_length=512,
-                temperature=0.7,
+            print("Loading HuggingFace embeddings model...")
+            self.embeddings = HuggingFaceEmbeddings(
+                model_name="sentence-transformers/all-MiniLM-L6-v2"
             )
-            self.llm = HuggingFacePipeline(pipeline=hf_pipeline)
+
+            print(f"Loading ChromaDB vector store from {PERSIST_DIRECTORY}...")
+            self.vector_store = Chroma(
+                persist_directory=PERSIST_DIRECTORY,
+                embedding_function=self.embeddings,
+                collection_name=COLLECTION_NAME
+            )
+
+            self.retriever = self.vector_store.as_retriever(
+                search_type="similarity",
+                search_kwargs={"k": 4}
+            )
         except Exception as e:
-            print(f"Warning: Could not load HuggingFace LLM: {e}")
-            print("Falling back to a simple text-based approach.")
-            # Fallback: use a simple text completion approach
-            from langchain.llms.base import LLM
-            from typing import Optional, List
-            
-            class SimpleLLM(LLM):
-                def _call(self, prompt: str, stop: Optional[List[str]] = None) -> str:
-                    # Extract the question from the prompt
-                    if "User Question:" in prompt:
-                        question = prompt.split("User Question:")[-1].strip()
-                        return f"Based on the context provided, I understand you're asking: {question}. Please configure a proper HuggingFace LLM model for full functionality."
-                    return "Please configure a proper LLM model for full functionality."
-                
-                @property
-                def _llm_type(self) -> str:
-                    return "simple"
-            
-            self.llm = SimpleLLM()
+            print(f"Warning: Could not initialize ChromaDB retrieval: {e}")
+            print("Falling back to keyword search over the source JSON content.")
+            self.use_fallback_mode = True
+            content_dir = Path(__file__).parent.parent / "data" / "content"
+            self.fallback_documents = load_documents_from_content_dir(content_dir)
 
-        # Create retriever
-        self.retriever = self.vector_store.as_retriever(
-            search_type="similarity",
-            search_kwargs={"k": 4}  # Retrieve top 4 most relevant chunks
-        )
-
-        # Create prompt template
         self.prompt = ChatPromptTemplate.from_template("""
 You are a helpful AI assistant for Safik AI, an AI services company.
 Answer the user's question based on the provided context. Be professional, friendly, and informative.
@@ -147,19 +179,69 @@ User Question: {question}
 
 Answer:""")
 
-        # Create RAG chain
-        self.rag_chain = (
-            {"context": self.retriever | self._format_docs, "question": RunnablePassthrough()}
-            | self.prompt
-            | self.llm
-            | StrOutputParser()
-        )
+        self._initialize_llm()
+
+        if self.retriever is not None and self.llm is not None:
+            self.rag_chain = (
+                {"context": self.retriever | self._format_docs, "question": RunnablePassthrough()}
+                | self.prompt
+                | self.llm
+                | StrOutputParser()
+            )
 
         print("✅ RAG system initialized successfully!")
+
+    def _initialize_llm(self):
+        """Initialize the HuggingFace LLM, or keep a fallback if Torch is unavailable."""
+        print("Loading HuggingFace LLM...")
+        model_name = "google/flan-t5-base"
+
+        try:
+            from transformers import pipeline
+
+            hf_pipeline = pipeline(
+                "text2text-generation",
+                model=model_name,
+                max_length=512,
+                temperature=0.7,
+            )
+            self.llm = HuggingFacePipeline(pipeline=hf_pipeline)
+        except Exception as e:
+            print(f"Warning: Could not load HuggingFace LLM: {e}")
+            print("Falling back to extractive answers from the retrieved documents.")
+            self.llm = None
 
     def _format_docs(self, docs):
         """Format retrieved documents into a single string"""
         return "\n\n".join(doc.page_content for doc in docs)
+
+    def _tokenize(self, text: str):
+        return set(re.findall(r"[a-z0-9]+", text.lower()))
+
+    def _fallback_retrieve(self, question: str):
+        query_tokens = self._tokenize(question)
+        scored_docs = []
+
+        for doc in self.fallback_documents:
+            doc_tokens = self._tokenize(doc["page_content"])
+            score = len(query_tokens & doc_tokens)
+            if score > 0:
+                scored_docs.append((score, doc))
+
+        scored_docs.sort(key=lambda item: item[0], reverse=True)
+        return [item[1] for item in scored_docs[:4]]
+
+    def _fallback_answer(self, question: str, relevant_docs):
+        if not relevant_docs:
+            return (
+                "I could not load the embedding model in this environment, so I am using a keyword-based fallback. "
+                "I do not have enough matching content to answer that question confidently."
+            )
+
+        top_doc = relevant_docs[0]
+        page_name = top_doc["metadata"].get("page", "Unknown")
+        source_line = top_doc["page_content"].split("\n\n")[0]
+        return f"I found related information in {page_name}. {source_line}"
     
     
     def ask(self, question: str) -> dict:
@@ -172,18 +254,19 @@ Answer:""")
         Returns:
             dict with 'answer' and 'sources' keys
         """
-        # Get relevant documents
-        relevant_docs = self.retriever.invoke(question)
-
-        # Generate answer
-        answer = self.rag_chain.invoke(question)
+        if self.retriever is not None:
+            relevant_docs = self.retriever.invoke(question)
+            answer = self.rag_chain.invoke(question) if self.rag_chain is not None else self._fallback_answer(question, [])
+        else:
+            relevant_docs = self._fallback_retrieve(question)
+            answer = self._fallback_answer(question, relevant_docs)
         
         # Extract source information
         sources = []
         seen_sources = set()
         
         for doc in relevant_docs:
-            metadata = doc.metadata
+            metadata = doc.metadata if hasattr(doc, "metadata") else doc["metadata"]
             source_info = metadata.get("page", "Unknown")
 
             # Add section or question info if available

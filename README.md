@@ -90,7 +90,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-**Note**: This will install PyTorch and transformers which may take some minutes 
+**Note**: This will install PyTorch and transformers which may take some minutes
 
 ## 🚀 Usage
 
@@ -112,16 +112,19 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ### Viewing the Frontend
 
 1. Navigate to the frontend directory:
+
    ```bash
    cd frontend
    ```
 
 2. Install dependencies (first time only):
+
    ```bash
    npm install
    ```
 
 3. Start the development server:
+
    ```bash
    npm run dev
    ```
@@ -289,7 +292,7 @@ Key Python packages:
 - `chromadb==0.4.22` - Vector database
 - `transformers==4.40.0` - HuggingFace transformers
 - `sentence-transformers==2.7.0` - Sentence embeddings
-- `torch==2.4.0` - PyTorch (for transformers)
+- `torch==2.9.1` - PyTorch (for transformers)
 
 ## 🐛 Troubleshooting
 
