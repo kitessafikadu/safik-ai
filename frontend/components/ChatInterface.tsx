@@ -36,6 +36,16 @@ export default function ChatInterface() {
     return text.replace(/^\s*(Answer\s*[:\-]\s*)/i, "").trim();
   };
 
+  const getErrorMessage = (err: unknown): string => {
+    if (err instanceof Error) return err.message;
+    if (typeof err === "string") return err;
+    try {
+      return JSON.stringify(err);
+    } catch {
+      return String(err);
+    }
+  };
+
   useEffect(() => {
     scrollToBottom();
   }, [messages, isLoading]);
@@ -109,8 +119,8 @@ export default function ChatInterface() {
         sources: data.sources,
       };
       setMessages((prev) => [...prev, newBotMsg]);
-    } catch (err: any) {
-      const errMsg = err && err.message ? err.message : String(err);
+    } catch (err: unknown) {
+      const errMsg = getErrorMessage(err);
       console.error("Chat request failed:", err, {
         env: process.env.NEXT_PUBLIC_API_BASE_URL,
       });
@@ -200,8 +210,8 @@ export default function ChatInterface() {
         sources: data.sources,
       };
       setMessages((prev) => [...prev, newBotMsg]);
-    } catch (err: any) {
-      const errMsg = err && err.message ? err.message : String(err);
+    } catch (err: unknown) {
+      const errMsg = getErrorMessage(err);
       console.error("Chat request failed:", err, {
         env: process.env.NEXT_PUBLIC_API_BASE_URL,
       });
@@ -267,7 +277,23 @@ export default function ChatInterface() {
                       style={{ borderRadius: "6px" }}
                     />
                   ) : (
-                    "U"
+                    <svg
+                      width={24}
+                      height={24}
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="user-avatar-svg"
+                    >
+                      <path
+                        d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5z"
+                        fill="#6b7280"
+                      />
+                      <path
+                        d="M3 20c0-2.761 4.477-5 9-5s9 2.239 9 5v1H3v-1z"
+                        fill="#9ca3af"
+                      />
+                    </svg>
                   )}
                 </div>
                 <div className="message-content">
