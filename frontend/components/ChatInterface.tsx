@@ -25,9 +25,38 @@ export default function ChatInterface() {
   const [isLoading, setIsLoading] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const animateTimersRef = useRef<ReturnType<typeof setTimeout>[]>([]);
+  const prevMsgCountRef = useRef<number>(messages.length);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // Animate bot text by progressively revealing characters
+  const addAnimatedBotMessage = (fullText: string, sources?: string[]) => {
+    const id = (Date.now() + 1).toString();
+    const newMsg: Message = { id, text: "", sender: "bot", sources };
+    setMessages((prev) => [...prev, newMsg]);
+
+    let index = 0;
+    const speed = 18; // ms per character
+
+    const step = () => {
+      index += 1;
+      setMessages((prev) =>
+        prev.map((m) =>
+          m.id === id ? { ...m, text: fullText.slice(0, index) } : m,
+        ),
+      );
+      if (index < fullText.length) {
+        const t = setTimeout(step, speed);
+        animateTimersRef.current.push(t);
+      }
+    };
+
+    // start animation
+    const first = setTimeout(step, speed);
+    animateTimersRef.current.push(first);
   };
 
   const cleanBotText = (text: string | undefined | null) => {
@@ -47,8 +76,16 @@ export default function ChatInterface() {
   };
 
   useEffect(() => {
-    scrollToBottom();
-  }, [messages, isLoading]);
+    // Only scroll if manually triggered; no automatic scrolling
+  }, [messages.length]);
+
+  // cleanup timers only on unmount
+  useEffect(() => {
+    return () => {
+      animateTimersRef.current.forEach((t) => clearTimeout(t));
+      animateTimersRef.current = [];
+    };
+  }, []);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(e.target.value);
@@ -111,14 +148,9 @@ export default function ChatInterface() {
       }
 
       const data = await response.json();
-
-      const newBotMsg: Message = {
-        id: (Date.now() + 1).toString(),
-        text: cleanBotText(data.answer),
-        sender: "bot",
-        sources: data.sources,
-      };
-      setMessages((prev) => [...prev, newBotMsg]);
+      const answer = cleanBotText(data.answer);
+      addAnimatedBotMessage(answer, data.sources);
+      setIsLoading(false);
     } catch (err: unknown) {
       const errMsg = getErrorMessage(err);
       console.error("Chat request failed:", err, {
@@ -138,6 +170,10 @@ export default function ChatInterface() {
   };
 
   const clearChat = () => {
+    // stop any running animations
+    animateTimersRef.current.forEach((t) => clearTimeout(t));
+    animateTimersRef.current = [];
+    setIsLoading(false);
     setMessages([
       {
         id: "init",
@@ -148,18 +184,6 @@ export default function ChatInterface() {
   };
 
   const handleSuggestedClick = (text: string) => {
-    setInputValue(text);
-    // Determine if we should send immediately or let user edit?
-    // app.js sent immediately
-    // Ideally we update state then send, but state update is async.
-    // Let's just set it and trigger send logic manually or just call send with the text.
-    // But inputValue is bound to textarea.
-    // Let's just set the input value for now and focus, or replicate app.js behavior which was click -> send.
-    // To do click -> send we need to bypass the input state or handle it carefully.
-    // Easier: just set input, let user send? Or simulate send.
-    // App.js behavior: "chatInput.value = pill.textContent; sendButton.disabled = false; sendMessage();"
-    // So it sends immediately.
-    // Refactored sendMessage to accept text?
     sendText(text);
   };
 
@@ -202,14 +226,9 @@ export default function ChatInterface() {
       }
 
       const data = await response.json();
-
-      const newBotMsg: Message = {
-        id: (Date.now() + 1).toString(),
-        text: cleanBotText(data.answer),
-        sender: "bot",
-        sources: data.sources,
-      };
-      setMessages((prev) => [...prev, newBotMsg]);
+      const answer = cleanBotText(data.answer);
+      addAnimatedBotMessage(answer, data.sources);
+      setIsLoading(false);
     } catch (err: unknown) {
       const errMsg = getErrorMessage(err);
       console.error("Chat request failed:", err, {
@@ -289,14 +308,14 @@ export default function ChatInterface() {
                         cx="12"
                         cy="8"
                         r="3"
-                        stroke="#6b7280"
-                        strokeWidth="1.5"
+                        stroke="#374151"
+                        strokeWidth="2"
                         fill="none"
                       />
                       <path
                         d="M4 20c1.5-3 4.5-4 8-4s6.5 1 8 4"
-                        stroke="#9ca3af"
-                        strokeWidth="1.5"
+                        stroke="#374151"
+                        strokeWidth="2"
                         fill="none"
                         strokeLinecap="round"
                         strokeLinejoin="round"
@@ -339,7 +358,7 @@ export default function ChatInterface() {
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="suggested-questions">
+          <div className="suggested-questions" style={{ display: messages.length <= 1 ? "block" : "none" }}>
             <div className="suggested-title">Suggested questions:</div>
             <div className="suggested-pills">
               <button
