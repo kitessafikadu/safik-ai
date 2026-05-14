@@ -7,12 +7,11 @@ import os
 import re
 from pathlib import Path
 from dotenv import load_dotenv
-from langchain_huggingface import HuggingFaceEmbeddings
-from langchain_community.llms import HuggingFacePipeline
 from langchain_community.vectorstores import Chroma
 from langchain.prompts import ChatPromptTemplate
 from langchain.schema.runnable import RunnablePassthrough
 from langchain.schema.output_parser import StrOutputParser
+import requests
 
 # Load environment variables
 load_dotenv()
@@ -122,126 +121,136 @@ def load_documents_from_content_dir(content_dir: Path):
 
 
 class RAGSystem:
-    """RAG system for answering questions about Safik AI"""
+    """RAG system for answering questions about Safik AI - OPTIMIZED for low memory"""
 
     def __init__(self):
-        """Initialize the RAG system with ChromaDB vector store and HuggingFace"""
-        print("Initializing RAG system...")
+        """Initialize the RAG system with ChromaDB and optional HuggingFace Inference API"""
+        print("Initializing RAG system (optimized for low memory)...")
 
-        self.embeddings = None
         self.vector_store = None
         self.retriever = None
-        self.llm = None
-        self.rag_chain = None
         self.fallback_documents = []
-        self.use_fallback_mode = False
+        self.use_vector_store = False
+        self.hf_api_token = os.getenv("HUGGINGFACEHUB_API_TOKEN", None)
+        self.hf_api_enabled = bool(self.hf_api_token)
 
+        # Try to load ChromaDB (no embedding model needed for default backend)
         try:
-            print("Loading HuggingFace embeddings model...")
-            self.embeddings = HuggingFaceEmbeddings(
-                model_name="sentence-transformers/all-MiniLM-L6-v2"
-            )
-
             print(f"Loading ChromaDB vector store from {PERSIST_DIRECTORY}...")
             self.vector_store = Chroma(
                 persist_directory=PERSIST_DIRECTORY,
-                embedding_function=self.embeddings,
                 collection_name=COLLECTION_NAME
             )
 
-            self.retriever = self.vector_store.as_retriever(
-                search_type="similarity",
-                search_kwargs={"k": 4}
-            )
+            # Try to retrieve to verify it works
+            test_result = self.vector_store.similarity_search("AI services", k=1)
+            if test_result:
+                print("✓ ChromaDB loaded successfully with existing data")
+                self.retriever = self.vector_store.as_retriever(
+                    search_type="similarity",
+                    search_kwargs={"k": 4}
+                )
+                self.use_vector_store = True
+            else:
+                print("⚠ ChromaDB empty or not properly initialized")
+                self.use_vector_store = False
         except Exception as e:
-            print(f"Warning: Could not initialize ChromaDB retrieval: {e}")
-            print("Falling back to keyword search over the source JSON content.")
-            self.use_fallback_mode = True
-            content_dir = Path(__file__).parent.parent / "data" / "content"
-            self.fallback_documents = load_documents_from_content_dir(content_dir)
+            print(f"⚠ ChromaDB not available: {e}")
+            self.use_vector_store = False
 
-        self.prompt = ChatPromptTemplate.from_template("""
-You are a helpful AI assistant for Safik AI, an AI services company.
+        # Load fallback documents for keyword search
+        print("Loading fallback documents for keyword search...")
+        content_dir = Path(__file__).parent.parent / "data" / "content"
+        self.fallback_documents = load_documents_from_content_dir(content_dir)
+        print(f"✓ Loaded {len(self.fallback_documents)} fallback documents")
+
+        if self.hf_api_enabled:
+            print("✓ HuggingFace Inference API enabled for better answer generation")
+        else:
+            print("ℹ HuggingFace Inference API not configured (set HUGGINGFACEHUB_API_TOKEN)")
+
+        print("✅ RAG system initialized successfully!")
+
+    def _generate_answer_with_api(self, question: str, context: str) -> str:
+        """Generate answer using HuggingFace Inference API (lightweight)"""
+        if not self.hf_api_enabled:
+            return None
+
+        try:
+            prompt = f"""You are a helpful AI assistant for Safik AI, an AI services company.
 Answer the user's question based on the provided context. Be professional, friendly, and informative.
-
-IMPORTANT INSTRUCTIONS:
-- If the context contains relevant information, use it to answer the question
-- Be specific and cite information from the context
-- If the context doesn't contain enough information to fully answer the question, say so honestly
-- Don't make up information that's not in the context
-- Keep your answers concise but informative (2-4 sentences typically)
-- Use a professional but approachable tone
 
 Context from our knowledge base:
 {context}
 
 User Question: {question}
 
-Answer:""")
+Answer:"""
 
-        self._initialize_llm()
-
-        if self.retriever is not None and self.llm is not None:
-            self.rag_chain = (
-                {"context": self.retriever | self._format_docs, "question": RunnablePassthrough()}
-                | self.prompt
-                | self.llm
-                | StrOutputParser()
+            response = requests.post(
+                "https://api-inference.huggingface.co/models/google/flan-t5-large",
+                headers={"Authorization": f"Bearer {self.hf_api_token}"},
+                json={"inputs": prompt, "parameters": {"max_length": 256}},
+                timeout=10
             )
-
-        print("✅ RAG system initialized successfully!")
-
-    def _initialize_llm(self):
-        """Initialize the HuggingFace LLM, or keep a fallback if Torch is unavailable."""
-        print("Loading HuggingFace LLM...")
-        model_name = "google/flan-t5-base"
-
-        try:
-            from transformers import pipeline
-
-            hf_pipeline = pipeline(
-                "text2text-generation",
-                model=model_name,
-                max_length=512,
-                temperature=0.7,
-            )
-            self.llm = HuggingFacePipeline(pipeline=hf_pipeline)
+            if response.status_code == 200:
+                result = response.json()
+                if isinstance(result, list) and len(result) > 0:
+                    return result[0].get("generated_text", "").strip()
         except Exception as e:
-            print(f"Warning: Could not load HuggingFace LLM: {e}")
-            print("Falling back to extractive answers from the retrieved documents.")
-            self.llm = None
+            print(f"API generation failed: {e}")
+        
+        return None
 
     def _format_docs(self, docs):
         """Format retrieved documents into a single string"""
-        return "\n\n".join(doc.page_content for doc in docs)
+        if isinstance(docs, list) and len(docs) > 0:
+            if hasattr(docs[0], 'page_content'):
+                return "\n\n".join(doc.page_content for doc in docs)
+            else:
+                return "\n\n".join(doc["page_content"] for doc in docs)
+        return ""
 
     def _tokenize(self, text: str):
         return set(re.findall(r"[a-z0-9]+", text.lower()))
 
-    def _fallback_retrieve(self, question: str):
+    def _fallback_retrieve(self, question: str, top_k: int = 4):
+        """Keyword-based retrieval using token matching"""
         query_tokens = self._tokenize(question)
         scored_docs = []
 
         for doc in self.fallback_documents:
             doc_tokens = self._tokenize(doc["page_content"])
+            # Score based on token overlap
             score = len(query_tokens & doc_tokens)
             if score > 0:
                 scored_docs.append((score, doc))
 
         scored_docs.sort(key=lambda item: item[0], reverse=True)
-        return [item[1] for item in scored_docs[:4]]
+        return [item[1] for item in scored_docs[:top_k]]
 
     def _fallback_answer(self, question: str, relevant_docs):
+        """Generate answer from relevant documents without LLM"""
         if not relevant_docs:
-            return (
-                "I could not load the embedding model in this environment, so I am using a keyword-based fallback. "
-                "I do not have enough matching content to answer that question confidently."
-            )
+            return "I don't have information about that topic. Please ask about our AI services, pricing, case studies, or FAQ."
 
-        top_doc = relevant_docs[0]
-        page_name = top_doc["metadata"].get("page", "Unknown")
-        source_line = top_doc["page_content"].split("\n\n")[0]
-        return f"I found related information in {page_name}. {source_line}"
+        # Combine context from top documents
+        context = self._format_docs(relevant_docs)
+        
+        # Try to use HuggingFace API if available
+        if self.hf_api_enabled:
+            api_answer = self._generate_answer_with_api(question, context)
+            if api_answer:
+                return api_answer
+
+        # Fallback to extractive answer from documents
+        # Extract the first meaningful paragraph
+        lines = context.split('\n\n')
+        for line in lines:
+            if len(line.strip()) > 50:  # Get a reasonably sized answer
+                return line.strip()[:300]  # Cap at 300 chars
+        
+        return "I found related content but need more context to answer fully."
     
     
     def ask(self, question: str) -> dict:
@@ -254,12 +263,20 @@ Answer:""")
         Returns:
             dict with 'answer' and 'sources' keys
         """
-        if self.retriever is not None:
-            relevant_docs = self.retriever.invoke(question)
-            answer = self.rag_chain.invoke(question) if self.rag_chain is not None else self._fallback_answer(question, [])
+        # Try vector store first, then fallback to keyword search
+        relevant_docs = []
+        
+        if self.use_vector_store and self.retriever:
+            try:
+                relevant_docs = self.retriever.invoke(question)
+            except Exception as e:
+                print(f"Vector store query failed: {e}, falling back to keyword search")
+                relevant_docs = self._fallback_retrieve(question)
         else:
             relevant_docs = self._fallback_retrieve(question)
-            answer = self._fallback_answer(question, relevant_docs)
+        
+        # Generate answer
+        answer = self._fallback_answer(question, relevant_docs)
         
         # Extract source information
         sources = []
