@@ -1,4 +1,6 @@
 frontend/node_modules
+frontend/.env.local
+frontend/.env.production
 backend/.env
 backend/venv
 backend/.env.example

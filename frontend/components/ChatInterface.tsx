@@ -10,7 +10,8 @@ interface Message {
   sources?: string[];
 }
 
-const DEFAULT_ERROR_MESSAGE = "I apologize, but I'm currently unable to process your request. This could be because the server is not running yet. Please make sure the server is started and try again.";
+const DEFAULT_ERROR_MESSAGE =
+  "I apologize, but I'm currently unable to process your request. This could be because the server is not running yet. Please make sure the server is started and try again.";
 
 export default function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>([
@@ -69,7 +70,9 @@ export default function ChatInterface() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8000/api/chat", {
+      const apiBaseUrl =
+        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+      const response = await fetch(`${apiBaseUrl}/api/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -132,7 +135,7 @@ export default function ChatInterface() {
   const sendText = async (text: string) => {
     if (isLoading) return;
     const userMessage = text;
-    
+
     // Add user message
     const newUserMsg: Message = {
       id: Date.now().toString(),
@@ -143,7 +146,9 @@ export default function ChatInterface() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:8000/api/chat", {
+      const apiBaseUrl =
+        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
+      const response = await fetch(`${apiBaseUrl}/api/chat`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -177,7 +182,6 @@ export default function ChatInterface() {
     }
   };
 
-
   return (
     <section className="chatbot-section">
       <div className="container">
@@ -195,7 +199,11 @@ export default function ChatInterface() {
               <div className="status-indicator"></div>
               <span>AI Assistant Online</span>
             </div>
-            <button className="clear-chat" onClick={clearChat} title="Clear Chat">
+            <button
+              className="clear-chat"
+              onClick={clearChat}
+              title="Clear Chat"
+            >
               <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
                 <path
                   d="M4 4L16 16M16 4L4 16"
@@ -215,13 +223,13 @@ export default function ChatInterface() {
               >
                 <div className="message-avatar">
                   {msg.sender === "bot" ? (
-                    <Image 
-                      src="/bot.png" 
-                      alt="AI Assistant" 
-                      width={24} 
-                      height={24} 
+                    <Image
+                      src="/bot.png"
+                      alt="AI Assistant"
+                      width={24}
+                      height={24}
                       className="bot-avatar-img"
-                      style={{ borderRadius: '6px' }}
+                      style={{ borderRadius: "6px" }}
                     />
                   ) : (
                     "U"
@@ -229,15 +237,17 @@ export default function ChatInterface() {
                 </div>
                 <div className="message-content">
                   <div className="message-text">
-                     {msg.text}
-                     {msg.sources && msg.sources.length > 0 && (
-                        <div className="message-sources">
-                          <strong>Sources:</strong>
-                          {msg.sources.map((source, index) => (
-                            <span key={index} className="source-tag">{source}</span>
-                          ))}
-                        </div>
-                     )}
+                    {msg.text}
+                    {msg.sources && msg.sources.length > 0 && (
+                      <div className="message-sources">
+                        <strong>Sources:</strong>
+                        {msg.sources.map((source, index) => (
+                          <span key={index} className="source-tag">
+                            {source}
+                          </span>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -246,13 +256,13 @@ export default function ChatInterface() {
             {isLoading && (
               <div className="message bot-message">
                 <div className="message-avatar">
-                  <Image 
-                    src="/bot.png" 
-                    alt="AI Assistant" 
-                    width={24} 
-                    height={24} 
+                  <Image
+                    src="/bot.png"
+                    alt="AI Assistant"
+                    width={24}
+                    height={24}
                     className="bot-avatar-img"
-                    style={{ borderRadius: '6px' }}
+                    style={{ borderRadius: "6px" }}
                   />
                 </div>
                 <div className="message-content">
@@ -274,25 +284,33 @@ export default function ChatInterface() {
             <div className="suggested-pills">
               <button
                 className="suggested-pill"
-                onClick={() => handleSuggestedClick("What AI services do you offer?")}
+                onClick={() =>
+                  handleSuggestedClick("What AI services do you offer?")
+                }
               >
                 What AI services do you offer?
               </button>
               <button
                 className="suggested-pill"
-                onClick={() => handleSuggestedClick("Tell me about your pricing")}
+                onClick={() =>
+                  handleSuggestedClick("Tell me about your pricing")
+                }
               >
                 Tell me about your pricing
               </button>
               <button
                 className="suggested-pill"
-                onClick={() => handleSuggestedClick("What industries do you work with?")}
+                onClick={() =>
+                  handleSuggestedClick("What industries do you work with?")
+                }
               >
                 What industries do you work with?
               </button>
               <button
                 className="suggested-pill"
-                onClick={() => handleSuggestedClick("How long does implementation take?")}
+                onClick={() =>
+                  handleSuggestedClick("How long does implementation take?")
+                }
               >
                 How long does implementation take?
               </button>
@@ -333,13 +351,7 @@ export default function ChatInterface() {
         <div className="chatbot-info">
           <div className="info-card">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <circle
-                cx="12"
-                cy="12"
-                r="10"
-                stroke="#667eea"
-                strokeWidth="2"
-              />
+              <circle cx="12" cy="12" r="10" stroke="#667eea" strokeWidth="2" />
               <path
                 d="M12 8V12L14 14"
                 stroke="#667eea"
