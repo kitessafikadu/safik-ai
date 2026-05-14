@@ -196,11 +196,22 @@ Answer:"""
             if response.status_code == 200:
                 result = response.json()
                 if isinstance(result, list) and len(result) > 0:
-                    return result[0].get("generated_text", "").strip()
+                    text = result[0].get("generated_text", "").strip()
+                    return self._clean_generated_text(text)
         except Exception as e:
             print(f"API generation failed: {e}")
         
         return None
+
+    def _clean_generated_text(self, text: str) -> str:
+        """Clean model or document-extracted text: remove leading 'Question:' or 'Answer:' labels."""
+        if not text:
+            return ""
+        # Remove leading 'Question: ...' if the model echoed the question
+        text = re.sub(r"^\s*Question\s*[:\-]\s*.*?(\n\n|\n)", "", text, flags=re.I|re.S)
+        # Remove leading 'Answer:' or 'Answer -'
+        text = re.sub(r"^\s*Answer\s*[:\-]\s*", "", text, flags=re.I)
+        return text.strip()
 
     def _format_docs(self, docs):
         """Format retrieved documents into a single string"""
@@ -235,21 +246,32 @@ Answer:"""
             return "I don't have information about that topic. Please ask about our AI services, pricing, case studies, or FAQ."
 
         # Combine context from top documents
+        # Prefer API-generated answer when available
         context = self._format_docs(relevant_docs)
-        
-        # Try to use HuggingFace API if available
         if self.hf_api_enabled:
             api_answer = self._generate_answer_with_api(question, context)
             if api_answer:
                 return api_answer
 
-        # Fallback to extractive answer from documents
-        # Extract the first meaningful paragraph
-        lines = context.split('\n\n')
-        for line in lines:
-            if len(line.strip()) > 50:  # Get a reasonably sized answer
-                return line.strip()[:300]  # Cap at 300 chars
-        
+        # Extractive fallback: look for explicit 'Answer:' sections in docs
+        for doc in relevant_docs:
+            content = doc.page_content if hasattr(doc, 'page_content') else doc.get('page_content', '')
+            # Try to find 'Answer:' lines
+            m = re.search(r"Answer\s*[:\-]\s*(.+?)(?:\n\n|$)", content, flags=re.I|re.S)
+            if m:
+                return self._clean_generated_text(m.group(1).strip())
+
+            # If doc formatted as 'Question: ...\n\nAnswer: ...', capture the answer after Question
+            m2 = re.search(r"Question\s*[:\-].*?\n\nAnswer\s*[:\-]\s*(.+?)(?:\n\n|$)", content, flags=re.I|re.S)
+            if m2:
+                return self._clean_generated_text(m2.group(1).strip())
+
+        # Otherwise return the first reasonably long paragraph that isn't a question
+        paragraphs = [p.strip() for p in context.split('\n\n') if p.strip()]
+        for p in paragraphs:
+            if len(p) > 50 and not re.match(r"^\s*Question\s*[:\-]", p, flags=re.I):
+                return self._clean_generated_text(p[:1000])
+
         return "I found related content but need more context to answer fully."
     
     

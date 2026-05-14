@@ -30,6 +30,12 @@ export default function ChatInterface() {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const cleanBotText = (text: string | undefined | null) => {
+    if (!text) return "";
+    // Remove common prefixes like "Answer:" or "Answer -"
+    return text.replace(/^\s*(Answer\s*[:\-]\s*)/i, "").trim();
+  };
+
   useEffect(() => {
     scrollToBottom();
   }, [messages, isLoading]);
@@ -98,7 +104,7 @@ export default function ChatInterface() {
 
       const newBotMsg: Message = {
         id: (Date.now() + 1).toString(),
-        text: data.answer,
+        text: cleanBotText(data.answer),
         sender: "bot",
         sources: data.sources,
       };
@@ -189,7 +195,7 @@ export default function ChatInterface() {
 
       const newBotMsg: Message = {
         id: (Date.now() + 1).toString(),
-        text: data.answer,
+        text: cleanBotText(data.answer),
         sender: "bot",
         sources: data.sources,
       };
@@ -267,16 +273,7 @@ export default function ChatInterface() {
                 <div className="message-content">
                   <div className="message-text">
                     {msg.text}
-                    {msg.sources && msg.sources.length > 0 && (
-                      <div className="message-sources">
-                        <strong>Sources:</strong>
-                        {msg.sources.map((source, index) => (
-                          <span key={index} className="source-tag">
-                            {source}
-                          </span>
-                        ))}
-                      </div>
-                    )}
+                    {/* sources intentionally hidden in UI; only answer text is shown */}
                   </div>
                 </div>
               </div>
