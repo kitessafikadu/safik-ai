@@ -70,18 +70,28 @@ export default function ChatInterface() {
     setIsLoading(true);
 
     try {
-      const apiBaseUrl =
-        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
-      const response = await fetch(`${apiBaseUrl}/api/chat`, {
+      const envBase = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const fallback =
+        typeof window !== "undefined"
+          ? window.location.origin
+          : "http://localhost:8000";
+      const apiBaseUrl = (
+        envBase && envBase.length ? envBase : fallback
+      ).replace(/\/$/, "");
+      const url = `${apiBaseUrl}/api/chat`;
+
+      const response = await fetch(url, {
         method: "POST",
+        mode: "cors",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ question: userMessage }),
+        cache: "no-store",
       });
 
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error(`HTTP ${response.status} ${response.statusText}`);
       }
 
       const data = await response.json();
@@ -93,14 +103,19 @@ export default function ChatInterface() {
         sources: data.sources,
       };
       setMessages((prev) => [...prev, newBotMsg]);
-    } catch (error) {
-      console.error("Error:", error);
+    } catch (err: any) {
+      const errMsg = err && err.message ? err.message : String(err);
+      console.error("Chat request failed:", err, {
+        env: process.env.NEXT_PUBLIC_API_BASE_URL,
+      });
       const errorMsg: Message = {
         id: (Date.now() + 1).toString(),
-        text: DEFAULT_ERROR_MESSAGE,
+        text: `${DEFAULT_ERROR_MESSAGE} (URL: ${process.env.NEXT_PUBLIC_API_BASE_URL || window.location.origin})`,
         sender: "bot",
       };
       setMessages((prev) => [...prev, errorMsg]);
+      // Surface a developer console-friendly message
+      console.warn("Detailed error:", errMsg);
     } finally {
       setIsLoading(false);
     }
@@ -146,18 +161,28 @@ export default function ChatInterface() {
     setIsLoading(true);
 
     try {
-      const apiBaseUrl =
-        process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:8000";
-      const response = await fetch(`${apiBaseUrl}/api/chat`, {
+      const envBase = process.env.NEXT_PUBLIC_API_BASE_URL;
+      const fallback =
+        typeof window !== "undefined"
+          ? window.location.origin
+          : "http://localhost:8000";
+      const apiBaseUrl = (
+        envBase && envBase.length ? envBase : fallback
+      ).replace(/\/$/, "");
+      const url = `${apiBaseUrl}/api/chat`;
+
+      const response = await fetch(url, {
         method: "POST",
+        mode: "cors",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ question: userMessage }),
+        cache: "no-store",
       });
 
       if (!response.ok) {
-        throw new Error("Network response was not ok");
+        throw new Error(`HTTP ${response.status} ${response.statusText}`);
       }
 
       const data = await response.json();
@@ -169,14 +194,18 @@ export default function ChatInterface() {
         sources: data.sources,
       };
       setMessages((prev) => [...prev, newBotMsg]);
-    } catch (error) {
-      console.error("Error:", error);
+    } catch (err: any) {
+      const errMsg = err && err.message ? err.message : String(err);
+      console.error("Chat request failed:", err, {
+        env: process.env.NEXT_PUBLIC_API_BASE_URL,
+      });
       const errorMsg: Message = {
         id: (Date.now() + 1).toString(),
-        text: DEFAULT_ERROR_MESSAGE,
+        text: `${DEFAULT_ERROR_MESSAGE} (URL: ${process.env.NEXT_PUBLIC_API_BASE_URL || (typeof window !== "undefined" ? window.location.origin : "unknown")})`,
         sender: "bot",
       };
       setMessages((prev) => [...prev, errorMsg]);
+      console.warn("Detailed error:", errMsg);
     } finally {
       setIsLoading(false);
     }
