@@ -285,13 +285,21 @@ export default function ChatInterface() {
                       xmlns="http://www.w3.org/2000/svg"
                       className="user-avatar-svg"
                     >
-                      <path
-                        d="M12 12c2.761 0 5-2.239 5-5s-2.239-5-5-5-5 2.239-5 5 2.239 5 5 5z"
-                        fill="#6b7280"
+                      <circle
+                        cx="12"
+                        cy="8"
+                        r="3"
+                        stroke="#6b7280"
+                        strokeWidth="1.5"
+                        fill="none"
                       />
                       <path
-                        d="M3 20c0-2.761 4.477-5 9-5s9 2.239 9 5v1H3v-1z"
-                        fill="#9ca3af"
+                        d="M4 20c1.5-3 4.5-4 8-4s6.5 1 8 4"
+                        stroke="#9ca3af"
+                        strokeWidth="1.5"
+                        fill="none"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                       />
                     </svg>
                   )}
