@@ -10,7 +10,10 @@ export default function CTA() {
             Chat with our AI-powered assistant to learn more about our services
             and solutions.
           </p>
-          <Link href="/chatbot" className="btn btn-primary btn-large">
+          <Link
+            href="/chatbot"
+            className="btn btn-primary btn-large cta-button"
+          >
             Start Chatting Now
           </Link>
         </div>
