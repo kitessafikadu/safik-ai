@@ -358,7 +358,10 @@ export default function ChatInterface() {
             <div ref={messagesEndRef} />
           </div>
 
-          <div className="suggested-questions" style={{ display: messages.length <= 1 ? "block" : "none" }}>
+          <div
+            className="suggested-questions"
+            style={{ display: messages.length <= 1 ? "block" : "none" }}
+          >
             <div className="suggested-title">Suggested questions:</div>
             <div className="suggested-pills">
               <button
@@ -430,10 +433,10 @@ export default function ChatInterface() {
         <div className="chatbot-info">
           <div className="info-card">
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-              <circle cx="12" cy="12" r="10" stroke="#667eea" strokeWidth="2" />
+              <circle cx="12" cy="12" r="10" stroke="#2563EB" strokeWidth="2" />
               <path
                 d="M12 8V12L14 14"
-                stroke="#667eea"
+                stroke="#2563EB"
                 strokeWidth="2"
                 strokeLinecap="round"
               />
@@ -451,12 +454,12 @@ export default function ChatInterface() {
                 width="18"
                 height="18"
                 rx="2"
-                stroke="#667eea"
+                stroke="#2563EB"
                 strokeWidth="2"
               />
               <path
                 d="M9 12L11 14L15 10"
-                stroke="#667eea"
+                stroke="#2563EB"
                 strokeWidth="2"
                 strokeLinecap="round"
               />
@@ -470,21 +473,21 @@ export default function ChatInterface() {
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
               <path
                 d="M12 2L2 7L12 12L22 7L12 2Z"
-                stroke="#667eea"
+                stroke="#2563EB"
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
               <path
                 d="M2 17L12 22L22 17"
-                stroke="#667eea"
+                stroke="#2563EB"
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
               />
               <path
                 d="M2 12L12 17L22 12"
-                stroke="#667eea"
+                stroke="#2563EB"
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"

@@ -16,12 +16,12 @@ export default function Services() {
                   width="48"
                   height="48"
                   rx="12"
-                  fill="#667eea"
-                  opacity="0.1"
+                  fill="#2563EB"
+                  opacity="0.08"
                 />
                 <path
                   d="M24 16V32M16 24H32"
-                  stroke="#667eea"
+                  stroke="#2563EB"
                   strokeWidth="2"
                   strokeLinecap="round"
                 />
@@ -46,19 +46,19 @@ export default function Services() {
                   width="48"
                   height="48"
                   rx="12"
-                  fill="#f093fb"
-                  opacity="0.1"
+                  fill="#2563EB"
+                  opacity="0.08"
                 />
                 <circle
                   cx="24"
                   cy="24"
                   r="8"
-                  stroke="#f093fb"
+                  stroke="#2563EB"
                   strokeWidth="2"
                 />
                 <path
                   d="M24 16V12M24 36V32M32 24H36M12 24H16"
-                  stroke="#f093fb"
+                  stroke="#2563EB"
                   strokeWidth="2"
                   strokeLinecap="round"
                 />
@@ -83,12 +83,12 @@ export default function Services() {
                   width="48"
                   height="48"
                   rx="12"
-                  fill="#4facfe"
-                  opacity="0.1"
+                  fill="#2563EB"
+                  opacity="0.08"
                 />
                 <path
                   d="M16 28L20 24L24 28L32 20"
-                  stroke="#4facfe"
+                  stroke="#2563EB"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -114,12 +114,12 @@ export default function Services() {
                   width="48"
                   height="48"
                   rx="12"
-                  fill="#43e97b"
-                  opacity="0.1"
+                  fill="#2563EB"
+                  opacity="0.08"
                 />
                 <path
                   d="M20 24L24 28L32 20"
-                  stroke="#43e97b"
+                  stroke="#2563EB"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -145,8 +145,8 @@ export default function Services() {
                   width="48"
                   height="48"
                   rx="12"
-                  fill="#fa709a"
-                  opacity="0.1"
+                  fill="#2563EB"
+                  opacity="0.08"
                 />
                 <rect
                   x="18"
@@ -154,7 +154,7 @@ export default function Services() {
                   width="12"
                   height="12"
                   rx="2"
-                  stroke="#fa709a"
+                  stroke="#2563EB"
                   strokeWidth="2"
                 />
               </svg>
@@ -178,12 +178,12 @@ export default function Services() {
                   width="48"
                   height="48"
                   rx="12"
-                  fill="#764ba2"
-                  opacity="0.1"
+                  fill="#2563EB"
+                  opacity="0.08"
                 />
                 <path
                   d="M16 24H32M24 16V32"
-                  stroke="#764ba2"
+                  stroke="#2563EB"
                   strokeWidth="2"
                   strokeLinecap="round"
                 />
